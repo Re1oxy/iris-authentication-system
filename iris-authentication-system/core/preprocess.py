@@ -1,11 +1,14 @@
-import cv2
-import numpy as np
+from sklearn.preprocessing import StandardScaler
+
 
 class Preprocessor:
-    """Image preprocessing and normalization"""
+    """Feature normalization module."""
 
-    def preprocess(self, iris_img, size=(64, 64)):
-        gray = cv2.cvtColor(iris_img, cv2.COLOR_BGR2GRAY)
-        resized = cv2.resize(gray, size)
-        normalized = resized / 255.0
-        return normalized.astype(np.float32)
+    def __init__(self):
+        self.scaler = StandardScaler()
+
+    def fit_transform(self, X):
+        return self.scaler.fit_transform(X)
+
+    def transform(self, X):
+        return self.scaler.transform(X)

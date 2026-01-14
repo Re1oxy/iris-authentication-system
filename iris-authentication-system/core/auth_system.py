@@ -2,6 +2,9 @@
 from core.preprocessor import Preprocessor
 from core.classifiers import ClassifierFactory
 from core.evaluator import Evaluator
+from core.antispoofing import AntiSpoofingDetector
+
+CONFIDENCE_THRESHOLD = 0.7
 
 
 class AuthSystem:
@@ -30,6 +33,27 @@ class AuthSystem:
         print("Confusion matrix:")
         print(matrix)
 
+        anti_spoof = AntiSpoofingDetector()
+        anti_spoof.fit(X_train)
+
+        sample = X_test[0].reshape(1, -1)
+
+        if not anti_spoof.is_genuine(sample):
+            print("Access denied: spoofing suspected")
+            return
+
+        proba = model.predict_proba(sample)
+        confidence = max(proba[0])
+
+        if confidence < CONFIDENCE_THRESHOLD:
+            print("Access denied: low confidence")
+        else:
+            print("Access granted")
+
+
+
+
 
 if __name__ == "__main__":
     AuthSystem().run()
+

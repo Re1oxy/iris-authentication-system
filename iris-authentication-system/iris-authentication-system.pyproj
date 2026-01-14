@@ -21,13 +21,49 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="core\antispoofing.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\auth_system.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\camera.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\classifiers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\data_loader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\evaluator.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\iris_detector.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\preprocessor.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="iris_authentication_system.py" />
+    <Compile Include="tests\test_antispoofing.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_classifiers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_preprocessor.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="tests\" />
     <Folder Include="core\" />
     <Folder Include="dataset\" />
     <Folder Include="analysis\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="analysis\eda.ipynb" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -12,7 +12,7 @@ class ClassifierFactory:
 
     @staticmethod
     def svm(C=1.0, kernel="rbf"):
-        return SVC(C=C, kernel=kernel)
+        return SVC(C=C, kernel=kernel, probability=True)
 
     @staticmethod
     def random_forest(n_estimators=100):

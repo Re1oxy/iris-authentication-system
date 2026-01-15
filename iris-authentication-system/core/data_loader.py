@@ -11,7 +11,7 @@ class DataLoader:
 	def load_train(self):
 		df = pd.read_csv(self.train_path)
 		X = df.drop(columns= [self.label_columns])
-		y = df[self.label_column]
+		y = df[0]
 		return X, y
 
 	def load_test(self):

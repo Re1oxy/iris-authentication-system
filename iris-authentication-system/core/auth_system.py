@@ -14,7 +14,7 @@ class AuthSystem:
         loader = DataLoader(
             train_path="dataset/database.csv",
             test_path="dataset/test_dataset.csv",
-            label_column="label"
+            label_column= 0
         )
 
         X_train, y_train = loader.load_train()

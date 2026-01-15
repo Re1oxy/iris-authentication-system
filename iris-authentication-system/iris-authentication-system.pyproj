@@ -4,13 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>fc757885-e5fa-48f5-a618-4dde49c0479c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>iris_authentication_system.py</StartupFile>
+    <StartupFile>core\auth_system.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>iris-authentication-system</Name>
     <RootNamespace>iris-authentication-system</RootNamespace>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="analysis\eda.ipynb" />
+    <Content Include="dataset\database.csv" />
+    <Content Include="dataset\test_dataset.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

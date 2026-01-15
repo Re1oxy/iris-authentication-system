@@ -51,10 +51,6 @@ class AuthSystem:
             print("Access granted")
 
 
-        print("Label dtype:", y_train.dtype)
-        print("Unique labels:", y_train.unique()[:10])
-
-
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ class AuthSystem:
 
     def run(self):
         loader = DataLoader(
-            train_path="dataset/dataset.csv",
+            train_path="dataset/database.csv",
             test_path="dataset/test_dataset.csv",
             label_column="label"
         )

@@ -6,53 +6,57 @@ from core.antispoofing import AntiSpoofingDetector
 
 CONFIDENCE_THRESHOLD = 0.7
 
-
 class AuthSystem:
     """Main iris authentication pipeline."""
 
-    def run(self):
+    def __init__(self):
         loader = DataLoader(
             train_path="dataset/database.csv",
             test_path="dataset/test_dataset.csv",
-            label_column= 0
+            label_column=0
         )
-
         X_train, y_train = loader.load_train()
-        X_test, y_test = loader.load_test()
 
         pre = Preprocessor()
-        X_train = pre.fit_transform(X_train)
-        X_test = pre.transform(X_test)
+        self.X_train = pre.fit_transform(X_train)
 
-        model = ClassifierFactory.svm(C=1.0)
-        model.fit(X_train, y_train)
+        self.model = ClassifierFactory.svm(C=1.0)
+        self.model.fit(self.X_train, y_train)
 
-        acc, matrix = Evaluator.evaluate(model, X_test, y_test)
+        self.anti_spoof = AntiSpoofingDetector()
+        self.anti_spoof.fit(self.X_train)
 
-        print(f"Accuracy: {acc:.4f}")
-        print("Confusion matrix:")
-        print(matrix)
+        self.preprocessor = pre
 
-        anti_spoof = AntiSpoofingDetector()
-        anti_spoof.fit(X_train)
+    def authenticate(self, sample):
+        sample = self.preprocessor.transform(sample.to_numpy().reshape(1, -1)) if hasattr(sample, "to_numpy") else self.preprocessor.transform(sample)
 
-        sample = X_test[0].reshape(1, -1)
+        if not self.anti_spoof.is_genuine(sample):
+            return "denied_spoof", 0.0
 
-        if not anti_spoof.is_genuine(sample):
-            print("Access denied: spoofing suspected")
-            return
-
-        proba = model.predict_proba(sample)
+        proba = self.model.predict_proba(sample)
         confidence = max(proba[0])
 
         if confidence < CONFIDENCE_THRESHOLD:
-            print("Access denied: low confidence")
+            return "denied_low_confidence", confidence
         else:
-            print("Access granted")
+            return "granted", confidence
 
 
+    def run(self):
+        """Run authentication on a sample and print results."""
+        loader = DataLoader(
+            train_path="dataset/database.csv",
+            test_path="dataset/test_dataset.csv",
+            label_column=0
+        )
+        X_test, _ = loader.load_test()
+        sample = X_test[0].reshape(1, -1)
+
+        decision, confidence = self.authenticate(sample)
+
+        print(f"Decision: {decision}, Confidence: {confidence:.4f}")
 
 
 if __name__ == "__main__":
     AuthSystem().run()
-

@@ -1,4 +1,16 @@
 Iris-Based Biometric Authentication System
+
+==========================================================================================
+
+Wybrany problem badawczy
+
+Wybranym problemem badawczym jest zapewnienie bezpiecznego dostępu do danych poprzez zastosowanie biometrycznego uwierzytelniania opartego na skanowaniu tęczówki oka.
+
+Tradycyjne metody uwierzytelniania nie gwarantują wystarczającego poziomu ochrony, dlatego wykorzystanie unikalnych cech biometrycznych pozwala ograniczyć ryzyko nieautoryzowanego dostępu. 
+
+Tęczówka oka charakteryzuje się wysoką unikalnością i stabilnością, co czyni ją skutecznym identyfikatorem użytkownika.
+
+==========================================================================================
 1. Opis projektu
 
 Celem projektu było zaprojektowanie i implementacja systemu biometrycznego do uwierzytelniania użytkownika na podstawie cech oka (iris). System został zaimplementowany w języku Python z wykorzystaniem metod uczenia maszynowego oraz zasad programowania obiektowego (OOP).

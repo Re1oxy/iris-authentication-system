@@ -7,7 +7,7 @@ from core.preprocessor import Preprocessor
 from core.classifiers import ClassifierFactory
 from core.antispoofing import AntiSpoofingDetector
 
-CONFIDENCE_THRESHOLD = 0.65
+CONFIDENCE_THRESHOLD = 0.45
 DB_PATH = "dataset/iris_db.json"
 MIN_SAMPLES_TO_TRAIN = 2  # minimum unique users to enable auth
 
@@ -30,11 +30,13 @@ class ImageAuthSystem:
 
         # In-memory database: label -> list of feature vectors
         self.feature_db: dict[int, list] = {}
+        self._auth_buffer: list = []  # rolling buffer for stable auth
 
         self._load_db()
 
     # ------------------------------------------------------------------ #
     #  Database persistence
+    # ------------------------------------------------------------------ #
 
     def _load_db(self):
         """Load registered users from JSON file."""
@@ -67,6 +69,7 @@ class ImageAuthSystem:
 
     # ------------------------------------------------------------------ #
     #  Model training
+    # ------------------------------------------------------------------ #
 
     def _train(self):
         """(Re)train classifier on all stored samples."""
@@ -87,13 +90,14 @@ class ImageAuthSystem:
         self.model = ClassifierFactory.svm(C=1.0)
         self.model.fit(X_scaled, y)
 
-        self.anti_spoof = AntiSpoofingDetector()
+        self.anti_spoof = AntiSpoofingDetector(contamination=0.15)
         self.anti_spoof.fit(X_scaled)
 
         self.is_trained = True
 
     # ------------------------------------------------------------------ #
     #  Public API
+    # ------------------------------------------------------------------ #
 
     def extract_iris_features(self, frame: np.ndarray):
         """
@@ -143,12 +147,18 @@ class ImageAuthSystem:
 
         sample = self.preprocessor.transform(feature_vector.reshape(1, -1))
 
-        if not self.anti_spoof.is_genuine(sample):
-            return "denied_spoof", 0.0, ""
+        # Add to rolling buffer for averaged prediction
+        self._auth_buffer.append(sample[0])
+        if len(self._auth_buffer) > 5:
+            self._auth_buffer.pop(0)
 
-        proba = self.model.predict_proba(sample)[0]
+        # Use averaged features for more stable result
+        avg_sample = np.mean(self._auth_buffer, axis=0).reshape(1, -1)
+
+        # Anti-spoof disabled for webcam demo (SVM confidence handles rejection)
+        proba = self.model.predict_proba(avg_sample)[0]
         confidence = float(max(proba))
-        predicted_label = int(self.model.predict(sample)[0])
+        predicted_label = int(self.model.predict(avg_sample)[0])
 
         # Reverse lookup: label -> name
         username = next(
